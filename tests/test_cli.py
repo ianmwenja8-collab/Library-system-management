@@ -1,5 +1,5 @@
 """
-test for Ian's layer (cli/cli.py + utils/validators.py).
+Vic's tests for Ian's layer (cli/cli.py + utils/validators.py).
 
 These deliberately avoid mocking input()/argparse's sys.argv wiring in
 depth — that gets brittle fast. Instead they test the two things that
@@ -18,8 +18,6 @@ EXPECTED_SUBCOMMANDS = {
 
 def test_all_agreed_subcommands_exist():
     parser = build_parser()
-    # argparse doesn't expose subparser names directly; pull them from the
-    # subparsers action's choices dict.
     subparsers_action = next(
         a for a in parser._actions if a.dest == "command"
     )
@@ -28,14 +26,13 @@ def test_all_agreed_subcommands_exist():
 
 def test_checkout_requires_book_id_and_username():
     parser = build_parser()
-   args = parser.parse_args(["checkout", "--book-id", "1", "--username", "amy"])
+    args = parser.parse_args(["checkout", "--book-id", "1", "--username", "amy"])
     assert args.book_id == 1
     assert args.username == "amy"
 
 
 def test_add_book_requires_all_fields():
     parser = build_parser()
-    # Missing --copies should cause argparse to error out (SystemExit).
     try:
         parser.parse_args([
             "add-book", "--title", "Dune", "--author", "Herbert",
